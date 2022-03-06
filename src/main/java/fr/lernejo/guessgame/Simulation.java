@@ -4,7 +4,6 @@ import fr.lernejo.logger.Logger;
 import fr.lernejo.logger.LoggerFactory;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Scanner;
 
 public class Simulation {
 
@@ -26,7 +25,7 @@ public class Simulation {
     private boolean nextRound() {
         long nombre = player.askNextGuess();
 
-        if (nombre == numberToGuess) {
+        if (nombre == this.numberToGuess) {
             logger.log("Bonne Réponse !!!\n");
             return true;
         }
@@ -41,13 +40,34 @@ public class Simulation {
         return false;
     }
 
-    public void loopUntilPlayerSucceed() {
+    public void loopUntilPlayerSucceed(long nbMax) {
 
-        long time = System.currentTimeMillis();
-        boolean echec = false;
+        int nbLoop = 1;
+        long startTime = System.currentTimeMillis();
+        boolean fin = false;
 
-        while (!echec) {
-            echec = nextRound();
+        while (!nextRound()) {
+            nbLoop++;
+
+            if (nbLoop == nbMax) {
+                logger.log("Vous n'avez plus d'essai(s)\n");
+                fin = true;
+                break;
+            }
+            logger.log("Essayez encore !\n");
         }
+
+        if (!fin) {
+            logger.log("Félicitations, vous avez trouvé en " + nbLoop + "tour(s) !\n");
+        }
+        else
+            logger.log("Dommage, le nombre était " + numberToGuess +" !\n");
+
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss.SSS");
+        Date date = new Date(duration);
+        String dure = simpleDateFormat.format(date);
+        logger.log("La partie a duré " + duration + "\n");
     }
 }
