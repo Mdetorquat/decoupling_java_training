@@ -6,13 +6,22 @@ import java.util.Scanner;
 
 public class HumanPlayer implements Player {
 
-    Logger logger = LoggerFactory.getLogger("player");
+    Logger logger = LoggerFactory.getLogger(HumanPlayer.class.getName());
+    Scanner scanner = new Scanner(System.in);
 
     @Override
     public long askNextGuess() {
-        logger.log("Choisissez un nombre : ");
-        Scanner input = new Scanner(System.in);
-        return input.nextInt();
+        long number = -1;
+        while (number == -1) {
+            try {
+                number = Long.parseLong(scanner.nextLine());
+            } catch (Exception e) {
+                logger.log("Une erreur est survenue. Message : " + e.getMessage());
+            }
+        }
+
+        logger.log("Le joueur a donné le nombre " + number);
+        return number;
     }
 
     @Override
